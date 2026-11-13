@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Інформатика 10 клас (поглиблений рівень) — Уроки 11–12 | Цикли C++ та ПР №3</title>
+<style>
+  :root {
+    --bg: #f4f7fb;
+    --card: #ffffff;
+    --primary: #1d4ed8;
+    --primary-hover: #1e40af;
+    --secondary: #0f766e;
+    --accent: #d97706;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --code-bg: #0f172a;
+    --code-text: #e2e8f0;
+    --success: #15803d;
+    --success-bg: #dcfce7;
+    --danger: #b91c1c;
+    --danger-bg: #fee2e2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 60%, #0284c7 100%);
+    color: #fff;
+    padding: 1.5rem 1rem 1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .header-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+  .badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+    font-size: 0.8rem;
+  }
+  .badge {
+    background: rgba(255,255,255,0.18);
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+  header h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+  }
+  header p {
+    font-size: 0.95rem;
+    opacity: 0.92;
+  }
+  nav.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 1.2rem;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    padding-bottom: 0.5rem;
+  }
+  nav.tabs button {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    border: none;
+    padding: 0.55rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  nav.tabs button:hover {
+    background: rgba(255,255,255,0.25);
+  }
+  nav.tabs button.active {
+    background: #fff;
+    color: var(--primary);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+  main {
+    max-width: 1120px;
+    margin: 1.5rem auto 3rem;
+    padding: 0 1rem;
+  }
+  .section { display: none; }
+  .section.active { display: block; animation: fadeIn 0.25s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.4rem;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+  }
+  .card h2 {
+    font-size: 1.25rem;
+    color: #0f172a;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .card h3 {
+    font-size: 1.05rem;
+    color: var(--primary);
+    margin: 1rem 0 0.45rem;
+  }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.2rem;
+  }
+  pre {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: 'Consolas', 'Fira Code', monospace;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    margin: 0.6rem 0;
+    position: relative;
+  }
+  .copy-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 0.25rem 0.6rem;
+    border-radius: 5px;
+    font-size: 0.75rem;
+    cursor: pointer;
+  }
+  .copy-btn:hover { background: rgba(255,255,255,0.3); }
+  .btn {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 0.55rem 1.1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+  }
+  .btn:hover { background: var(--primary-hover); }
+  .btn-secondary { background: var(--secondary); }
+  .btn-secondary:hover { background: #115e59; }
+  .btn-outline {
+    background: transparent;
+    border: 1.5px solid var(--primary);
+    color: var(--primary);
+  }
+  .btn-outline:hover { background: #eff6ff; }
+  input[type="text"], input[type="number"], input[type="password"], select {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    font-size: 0.92rem;
+    font-family: inherit;
+  }
+  .code-input {
+    font-family: 'Consolas', monospace;
+    background: #1e293b;
+    color: #38bdf8;
+    border: 1px solid #475569;
+    border-radius: 4px;
+    padding: 0.15rem 0.4rem;
+    width: 110px;
+    font-size: 0.88rem;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.8rem 0;
+    font-size: 0.9rem;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 0.55rem 0.75rem;
+    text-align: left;
+  }
+  th { background: #f1f5f9; font-weight: 600; }
+  .ascii-box {
+    background: #0f172a;
+    color: #34d399;
+    font-family: 'Consolas', monospace;
+    padding: 1rem;
+    border-radius: 8px;
+    white-space: pre;
+    line-height: 1.25;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    min-height: 160px;
+  }
+  .feedback {
+    margin-top: 0.6rem;
+    padding: 0.6rem 0.9rem;
+    border-radius: 7px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: none;
+  }
+  .feedback.ok { display: block; background: var(--success-bg); color: var(--success); }
+  .feedback.err { display: block; background: var(--danger-bg); color: var(--danger); }
+  .quiz-q {
+    border-bottom: 1px solid var(--border);
+    padding: 0.9rem 0;
+  }
+  .quiz-q:last-child { border-bottom: none; }
+  .quiz-opt {
+    display: block;
+    margin: 0.35rem 0;
+    cursor: pointer;
+  }
+  .collatz-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 150px;
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem;
+    margin-top: 0.75rem;
+    overflow-x: auto;
+  }
+  .bar {
+    background: var(--primary);
+    min-width: 12px;
+    border-radius: 3px 3px 0 0;
+    position: relative;
+    transition: height 0.2s;
+  }
+  .bar:hover { background: var(--accent); }
+  .step-list { list-style: none; counter-reset: st; }
+  .step-list li {
+    counter-increment: st;
+    position: relative;
+    padding-left: 2.3rem;
+    margin-bottom: 0.9rem;
+  }
+  .step-list li::before {
+    content: counter(st);
+    position: absolute;
+    left: 0;
+    top: 0.1rem;
+    width: 1.65rem;
+    height: 1.65rem;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 1.65rem;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+  .score-pill {
+    display: inline-block;
+    background: #eff6ff;
+    color: var(--primary);
+    border: 1px solid #bfdbfe;
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    font-weight: 700;
+  }
+  .cert-box {
+    border: 2px solid var(--primary);
+    background: linear-gradient(180deg, #ffffff 0%, #f0f9ff 100%);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+  }
+  @media print {
+    header, nav.tabs, .no-print { display: none !important; }
+    .section { display: block !important; }
+    .card { box-shadow: none; border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="badge-row">
+      <span class="badge">Інформатика • 10 клас (поглиблений рівень)</span>
+      <span class="badge">Програма: Арбузов М.Ю., Забзанова І.О.</span>
+      <span class="badge">Розділ 3. Циклічна алгоритмічна структура</span>
+    </div>
+    <h1>Уроки 11–12: Цикл <code>for</code>, вкладені цикли та Практична робота №3</h1>
+    <p>Складні відсотки • Факторіал • Числа Фібоначчі • Геометричні фігури • Гіпотеза Коллатца • Публікація на GitHub Pages</p>
+    <nav class="tabs" role="tablist">
+      <button class="active" onclick="switchTab('theory', this)">1. Теорія та код C++</button>
+      <button onclick="switchTab('simulators', this)">2. Інтерактивні симулятори</button>
+      <button onclick="switchTab('practice', this)">3. Тренажер і ПР №3</button>
+      <button onclick="switchTab('github', this)">4. GitHub та вебсторінка</button>
+      <button onclick="switchTab('teacher', this)">5. Кабінет вчителя</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- TAB 1: THEORY -->
+  <section id="theory" class="section active">
+    <div class="card">
+      <h2>📘 Урок 11. Цикл з параметром <code>for</code>. Складні відсотки. Факторіал. Фібоначчі</h2>
+      <p>Цикл <code>for</code> у мові C++ застосовують тоді, коли відома кількість повторень або є чіткий закон зміни лічильника:</p>
+      <pre><button class="copy-btn" onclick="copyCode(this)">Копіювати</button><code>for (ініціалізація; умова_продовження; крок_зміни) {
+    // тіло циклу
+}</code></pre>
+      <div class="grid-2">
+        <div>
+          <h3>1. Складні відсотки (капіталізація)</h3>
+          <p>Початковий внесок $S_0$ зростає щороку на $p\%$. Формула рекурентного обчислення: $S_i = S_{i-1} \cdot \left(1 + rac{p}{100}ight)$.</p>
+          <pre><button class="copy-btn" onclick="copyCode(this)">Копіювати</button><code>#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+using namespace std;
+
+int main() {
+    double s, p;
+    int years;
+    cin &gt;&gt; s &gt;&gt; p &gt;&gt; years;
+    for (int i = 1; i &lt;= years; ++i) {
+        s = s * (1.0 + p / 100.0);
+    }
+    cout &lt;&lt; fixed &lt;&lt; setprecision(2) &lt;&lt; s &lt;&lt; endl;
+    return 0;
+}</code></pre>
+        </div>
+        <div>
+          <h3>2. Факторіал ($n!$) та числа Фібоначчі</h3>
+          <p>$n! = 1 \cdot 2 \cdot \dots \cdot n$ ($0! = 1$). Для $n \le 20$ використовуємо <code>unsigned long long</code>. Послідовність Фібоначчі: $F_1 = 1, F_2 = 1, F_i = F_{i-1} + F_{i-2}$.</p>
+          <pre><button class="copy-btn" onclick="copyCode(this)">Копіювати</button><code>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int n;
+    cin &gt;&gt; n;
+    // Факторіал
+    unsigned long long fact = 1;
+    for (int i = 2; i &lt;= n; ++i) fact *= i;
+    cout &lt;&lt; "n! = " &lt;&lt; fact &lt;&lt; endl;
+
+    // n-те число Фібоначчі
+    unsigned long long a = 1, b = 1, c = 1;
+    for (int i = 3; i &lt;= n; ++i) {
+        c = a + b;
+        a = b;
+        b = c;
+    }
+    cout &lt;&lt; "F(n) = " &lt;&lt; (n == 0 ? 0 : c) &lt;&lt; endl;
+    return 0;
+}</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🧩 Урок 12. Вкладені цикли. Фігури. Гіпотеза Коллатца (ПР №3)</h2>
+      <div class="grid-2">
+        <div>
+          <h3>1. Вкладені цикли та текстові фігури</h3>
+          <p>Зовнішній цикл зазвичай перебирає номери рядків <code>i</code> (від $1$ до $N$), а внутрішній — позиції символів у рядку <code>j</code> (від $1$ до $M$). Наприклад, прямокутний трикутник:</p>
+          <pre><button class="copy-btn" onclick="copyCode(this)">Копіювати</button><code>int n = 5;
+for (int i = 1; i &lt;= n; ++i) {
+    for (int j = 1; j &lt;= i; ++j) {
+        cout &lt;&lt; "* ";
+    }
+    cout &lt;&lt; '
+';
+}</code></pre>
+        </div>
+        <div>
+          <h3>2. Гіпотеза Коллатца (проблема $3n + 1$)</h3>
+          <p>Візьмемо будь-яке натуральне число $n > 1$. Якщо $n$ парне — ділимо на $2$; якщо непарне — множимо на $3$ і додаємо $1$. Гіпотеза стверджує, що послідовність завжди дійде до $1$.</p>
+          <pre><button class="copy-btn" onclick="copyCode(this)">Копіювати</button><code>long long n;
+cin &gt;&gt; n;
+int steps = 0;
+while (n != 1) {
+    if (n % 2 == 0) n /= 2;
+    else n = 3 * n + 1;
+    steps++;
+}
+cout &lt;&lt; "Кроків: " &lt;&lt; steps &lt;&lt; endl;</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 2: SIMULATORS -->
+  <section id="simulators" class="section">
+    <div class="card">
+      <h2>🔍 Симулятор 1. Трасування циклу <code>for</code></h2>
+      <p>Оберіть алгоритм і вхідний параметр $N$, щоб побачити зміну змінних на кожній ітерації циклу:</p>
+      <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; margin:0.75rem 0;">
+        <select id="traceAlgo">
+          <option value="fact">Факторіал числа N (fact *= i)</option>
+          <option value="fib">Числа Фібоначчі до N-го члена</option>
+          <option value="interest">Складні відсотки (1000 грн під 15% на N років)</option>
+          <option value="sumsq">Сума квадратів непарних чисел від 1 до N</option>
+        </select>
+        <label>N = <input type="number" id="traceN" value="6" min="1" max="15" style="width:75px;"></label>
+        <button class="btn" onclick="runTrace()">Виконати трасування</button>
+      </div>
+      <div id="traceOutput"></div>
+    </div>
+
+    <div class="card">
+      <h2>📐 Симулятор 2. Генератор фігур вкладеними циклами</h2>
+      <p>Дослідіть залежність умови виведення символу <code>*</code> від індексів рядка <code>i</code> та стовпця <code>j</code>:</p>
+      <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; margin:0.75rem 0;">
+        <select id="shapeType" onchange="renderShape()">
+          <option value="rect">Заповнений прямокутник (N × N)</option>
+          <option value="frame">Порожній квадрат (рамка)</option>
+          <option value="tri_left">Прямокутний трикутник (j &lt;= i)</option>
+          <option value="tri_inv">Перевернутий трикутник (j &lt;= N - i + 1)</option>
+          <option value="pyramid">Рівнобедрена піраміда</option>
+          <option value="diag">Дві діагоналі (хрест X)</option>
+        </select>
+        <label>Розмір N = <input type="number" id="shapeN" value="6" min="3" max="14" style="width:75px;" onchange="renderShape()"></label>
+        <button class="btn" onclick="renderShape()">Побудувати</button>
+      </div>
+      <div class="grid-2">
+        <div>
+          <strong>Результат виводу в консоль:</strong>
+          <div id="shapeCanvas" class="ascii-box" style="margin-top:0.4rem;"></div>
+        </div>
+        <div>
+          <strong>Фрагмент коду C++:</strong>
+          <pre id="shapeCode" style="margin-top:0.4rem;"></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📈 Симулятор 3. Дослідник гіпотези Коллатца ($3n+1$)</h2>
+      <p>Введіть початкове число $n$ (наприклад, <code>27</code> — класичний приклад із піком 9232 за 111 кроків):</p>
+      <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; margin:0.75rem 0;">
+        <label>Початкове n = <input type="number" id="collatzInput" value="27" min="2" max="100000" style="width:120px;"></label>
+        <button class="btn" onclick="runCollatz()">Побудувати траєкторію</button>
+      </div>
+      <div id="collatzStats" style="font-weight:600; margin-top:0.5rem;"></div>
+      <div id="collatzBars" class="collatz-bars"></div>
+      <div id="collatzSeq" style="font-size:0.85rem; color:var(--muted); margin-top:0.5rem; word-break:break-word;"></div>
+    </div>
+  </section>
+
+  <!-- TAB 3: PRACTICE & PR 3 -->
+  <section id="practice" class="section">
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+        <h2>✍️ Інтерактивний тренажер (Уроки 11–12)</h2>
+        <span class="score-pill">Набрано балів: <span id="totalScore">0</span> / 12</span>
+      </div>
+
+      <h3>Блок А. Заповніть пропуски в коді C++ (4 бали)</h3>
+      <div class="quiz-q">
+        <p><strong>Завдання 1 (Складні відсотки).</strong> Вклад <code>s</code> збільшується на <code>p</code> відсотків щороку протягом <code>k</code> років:</p>
+        <pre><code>for (int i = 1; i &lt;= k; ++i) {
+    s = s * (1 + <input type="text" id="gap1" class="code-input" placeholder="вираз">);
+}</code></pre>
+        <button class="btn btn-outline" onclick="checkGap(1, ['p/100.0', 'p/100', '0.01*p', 'p*0.01'])">Перевірити</button>
+        <div id="fb1" class="feedback"></div>
+      </div>
+
+      <div class="quiz-q">
+        <p><strong>Завдання 2 (Числа Фібоначчі).</strong> Оновіть значення двох попередніх членів послідовності у циклі:</p>
+        <pre><code>c = a + b;
+a = <input type="text" id="gap2a" class="code-input" style="width:65px;" placeholder="?">;
+b = <input type="text" id="gap2b" class="code-input" style="width:65px;" placeholder="?">;</code></pre>
+        <button class="btn btn-outline" onclick="checkGap2()">Перевірити</button>
+        <div id="fb2" class="feedback"></div>
+      </div>
+
+      <div class="quiz-q">
+        <p><strong>Завдання 3 (Рамка квадрата $N 	imes N$).</strong> Яка умова виводить <code>*</code> лише по периметру квадрата (індексація <code>i, j</code> від <code>1</code> до <code>n</code>)?</p>
+        <pre><code>if (i == 1 || i == n || j == 1 || <input type="text" id="gap3" class="code-input" style="width:85px;" placeholder="умова">) cout &lt;&lt; "*";</code></pre>
+        <button class="btn btn-outline" onclick="checkGap(3, ['j==n'])">Перевірити</button>
+        <div id="fb3" class="feedback"></div>
+      </div>
+
+      <div class="quiz-q">
+        <p><strong>Завдання 4 (Крок Коллатца).</strong> Запишіть перетворення для непарного числа <code>n</code>:</p>
+        <pre><code>if (n % 2 == 0) n /= 2;
+else n = <input type="text" id="gap4" class="code-input" style="width:110px;" placeholder="вираз">;</code></pre>
+        <button class="btn btn-outline" onclick="checkGap(4, ['3*n+1', 'n*3+1'])">Перевірити</button>
+        <div id="fb4" class="feedback"></div>
+      </div>
+
+      <h3>Блок Б. Тест на аналіз циклів (4 бали)</h3>
+      <div class="quiz-q">
+        <p><strong>5. Скільки зірочок виведе фрагмент коду?</strong> <code>for(int i=1; i&lt;=4; ++i) for(int j=1; j&lt;=i; ++j) cout &lt;&lt; "*";</code></p>
+        <label class="quiz-opt"><input type="radio" name="q5" value="0"> 16 зірочок</label>
+        <label class="quiz-opt"><input type="radio" name="q5" value="1"> 10 зірочок (1 + 2 + 3 + 4)</label>
+        <label class="quiz-opt"><input type="radio" name="q5" value="0"> 8 зірочок</label>
+      </div>
+      <div class="quiz-q">
+        <p><strong>6. Яке значення виведе програма для $n = 6$ у послідовності Коллатца (кількість кроків до 1)?</strong> (6 → 3 → 10 → 5 → 16 → 8 → 4 → 2 → 1)</p>
+        <label class="quiz-opt"><input type="radio" name="q6" value="0"> 6 кроків</label>
+        <label class="quiz-opt"><input type="radio" name="q6" value="1"> 8 кроків</label>
+        <label class="quiz-opt"><input type="radio" name="q6" value="0"> 9 кроків</label>
+      </div>
+      <div class="quiz-q">
+        <p><strong>7. Чому для обчислення $20!$ у C++ тип <code>int</code> не підходить?</strong></p>
+        <label class="quiz-opt"><input type="radio" name="q7" value="1"> Відбудеться переповнення типу (20! ≈ 2.43 · 10¹⁸, потрібен <code>unsigned long long</code>)</label>
+        <label class="quiz-opt"><input type="radio" name="q7" value="0"> Цикл <code>for</code> не працює з великими числами</label>
+        <label class="quiz-opt"><input type="radio" name="q7" value="0"> Факторіал є дробовим числом</label>
+      </div>
+      <div class="quiz-q">
+        <p><strong>8. Що виведе код?</strong> <code>int s=0; for(int i=10; i&gt;0; i-=3) s++; cout &lt;&lt; s;</code></p>
+        <label class="quiz-opt"><input type="radio" name="q8" value="0"> 3</label>
+        <label class="quiz-opt"><input type="radio" name="q8" value="1"> 4 (ітерації при i = 10, 7, 4, 1)</label>
+        <label class="quiz-opt"><input type="radio" name="q8" value="0"> Нескінченний цикл</label>
+      </div>
+      <button class="btn" onclick="gradeQuiz()" style="margin-top:0.6rem;">Перевірити тест (Блок Б)</button>
+      <div id="quizFb" class="feedback"></div>
+    </div>
+
+    <div class="card">
+      <h2>💻 Практична робота №3. Завдання для самостійної реалізації (4 бали)</h2>
+      <p>Реалізуйте ці 3 задачі у середовищі C++ (Code::Blocks, CLion, Visual Studio або OnlineGDB), завантажте <code>.cpp</code> файли у свій репозиторій GitHub та відмітьте виконання:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Рівень</th>
+            <th>Умова задачі</th>
+            <th>Контрольний приклад</th>
+            <th>Виконано</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Рівень 1</strong><br>(1 бал)</td>
+            <td><strong>Таблиця капіталізації.</strong> Ввести суму вкладу $S$, річну ставку $P\%$ та кількість років $N$. Вивести залишок на рахунку наприкінці кожного року (від $1$ до $N$).</td>
+            <td>Вхід: <code>1000 10 3</code><br>Вихід:<br><code>1: 1100.00</code><br><code>2: 1210.00</code><br><code>3: 1331.00</code></td>
+            <td><input type="checkbox" class="pr-chk" data-pts="1" onchange="updateScore()"> +1 б.</td>
+          </tr>
+          <tr>
+            <td><strong>Рівень 2</strong><br>(1.5 бала)</td>
+            <td><strong>Пісочний годинник.</strong> Для непарного натурального $N$ вивести вкладеними циклами фігуру «пісочний годинник» із символів <code>*</code>.</td>
+            <td>Вхід: <code>5</code><br>Вихід:<pre style="margin:0;padding:0.4rem;">*****
+ ***
+  *
+ ***
+*****</pre></td>
+            <td><input type="checkbox" class="pr-chk" data-pts="1.5" onchange="updateScore()"> +1.5 б.</td>
+          </tr>
+          <tr>
+            <td><strong>Рівень 3</strong><br>(1.5 бала)</td>
+            <td><strong>Рекордсмен Коллатца на відрізку $[A; B]$.</strong> Знайти число $x \in [A; B]$, для якого сиракузька послідовність має найбільшу кількість кроків, та вивести це число і кількість кроків.</td>
+            <td>Вхід: <code>1 10</code><br>Вихід: <code>9 19</code><br>(число 9 досягає 1 за 19 кроків)</td>
+            <td><input type="checkbox" class="pr-chk" data-pts="1.5" onchange="updateScore()"> +1.5 б.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="cert-box">
+        <h3>🎓 Звіт учня про виконання роботи</h3>
+        <div style="display:flex; flex-wrap:wrap; gap:0.75rem; margin:0.6rem 0;">
+          <input type="text" id="studentName" placeholder="Прізвище та ім'я учня (10 клас)" style="min-width:260px;">
+          <input type="text" id="repoUrl" placeholder="Посилання на ваш GitHub-репозиторій" style="min-width:280px;">
+          <button class="btn btn-secondary" onclick="generateReport()">Сформувати звіт</button>
+        </div>
+        <div id="studentReport"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 4: GITHUB -->
+  <section id="github" class="section">
+    <div class="card">
+      <h2>🚀 Інструкція: Завантаження проєкту на GitHub та створення вебсторінки</h2>
+      <p>Виконайте ці 6 кроків, щоб опублікувати власну вебсторінку-портфоліо з розв'язками Уроків 11–12 та ПР №3 в інтернеті:</p>
+      <ol class="step-list" style="margin-top:1rem;">
+        <li>
+          <strong>Створіть обліковий запис або увійдіть на GitHub:</strong> перейдіть на <a href="https://github.com" target="_blank" rel="noopener">github.com</a> та авторизуйтеся.
+        </li>
+        <li>
+          <strong>Створіть новий публічний репозиторій:</strong> натисніть <strong>+ → New repository</strong>. Вкажіть назву, наприклад <code>cpp-loops-pr3</code>, оберіть статус <strong>Public</strong>, поставте прапорець <strong>Add a README file</strong> та натисніть <strong>Create repository</strong>.
+        </li>
+        <li>
+          <strong>Завантажте файли:</strong> у репозиторії натисніть <strong>Add file → Upload files</strong>. Перетягніть ваші файли розв'язків (<code>task1.cpp</code>, <code>task2.cpp</code>, <code>task3.cpp</code>) та файл вебсторінки <code>index.html</code> (обов'язково з такою назвою для головної сторінки сайту!). Натисніть <strong>Commit changes</strong>.
+        </li>
+        <li>
+          <strong>Увімкніть GitHub Pages:</strong> перейдіть у вкладку <strong>Settings</strong> (Налаштування репозиторію) → у лівому меню оберіть <strong>Pages</strong>.
+        </li>
+        <li>
+          <strong>Налаштуйте джерело публікації:</strong> у розділі <em>Build and deployment → Source</em> залиште <strong>Deploy from a branch</strong>. У пункті <em>Branch</em> виберіть гілку <strong>main</strong> та папку <strong>/ (root)</strong>, після чого натисніть <strong>Save</strong>.
+        </li>
+        <li>
+          <strong>Отримайте посилання на вебсторінку:</strong> зачекайте 1–2 хвилини та оновіть сторінку <em>Settings → Pages</em>. Зверху з'явиться активне посилання вигляду <code>https://ваш-логін.github.io/cpp-loops-pr3/</code>. Скопіюйте його та здайте вчителю!
+        </li>
+      </ol>
+
+      <h3>Шаблон власної сторінки-звіту <code>index.html</code> для учня</h3>
+      <p>Якщо ви хочете створити власну легку сторінку-звіт для GitHub Pages, скопіюйте цей шаблон, вставте свій код C++ і завантажте як <code>index.html</code>:</p>
+      <pre><button class="copy-btn" onclick="copyCode(this)">Копіювати HTML</button><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="uk"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;ПР №3 — Цикли C++ | Портфоліо учня&lt;/title&gt;
+  &lt;style&gt;
+    body { font-family: sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem; line-height: 1.6; }
+    pre { background: #1e293b; color: #f8fafc; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+    h1 { color: #1d4ed8; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Практична робота №3: Вкладені цикли та гіпотеза Коллатца&lt;/h1&gt;
+  &lt;p&gt;&lt;strong&gt;Виконав(ла):&lt;/strong&gt; Прізвище Ім'я, 10 клас&lt;/p&gt;
+  &lt;h2&gt;Задача 1. Складні відсотки&lt;/h2&gt;
+  &lt;pre&gt;&lt;code&gt;// Вставте сюди ваш код C++&lt;/code&gt;&lt;/pre&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+      <h3>Чек-лист самоперевірки перед здачею</h3>
+      <div>
+        <label style="display:block; margin:0.35rem 0;"><input type="checkbox"> Репозиторій має статус <strong>Public</strong> (відкритий для перевірки вчителем)</label>
+        <label style="display:block; margin:0.35rem 0;"><input type="checkbox"> Головний HTML-файл названо рівно <code>index.html</code> (малими літерами)</label>
+        <label style="display:block; margin:0.35rem 0;"><input type="checkbox"> У репозиторії є вихідні коди програм <code>.cpp</code>, які компілюються без помилок</label>
+        <label style="display:block; margin:0.35rem 0;"><input type="checkbox"> Посилання <code>github.io</code> відкривається у режимі інкогніто браузера</label>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 5: TEACHER CABINET -->
+  <section id="teacher" class="section">
+    <div class="card" id="teacherLock">
+      <h2>🔐 Кабінет вчителя</h2>
+      <p>Введіть пароль доступу для перегляду еталонних розв'язків, ключів тренажера та генератора варіантів:</p>
+      <div style="display:flex; gap:0.6rem; margin-top:0.75rem; align-items:center;">
+        <input type="password" id="teacherPass" placeholder="Пароль вчителя" onkeydown="if(event.key==='Enter') unlockTeacher()">
+        <button class="btn" onclick="unlockTeacher()">Увійти</button>
+      </div>
+      <div id="passFb" class="feedback err" style="display:none;">Невірний пароль. Спробуйте ще раз.</div>
+    </div>
+
+    <div id="teacherPanel" style="display:none;">
+      <div class="card">
+        <h2>🔑 Ключі до інтерактивного тренажера</h2>
+        <table>
+          <thead><tr><th>Завдання</th><th>Правильна відповідь</th></tr></thead>
+          <tbody>
+            <tr><td>Пропуск 1 (Складні відсотки)</td><td><code>p / 100.0</code> або <code>p / 100</code></td></tr>
+            <tr><td>Пропуск 2 (Числа Фібоначчі)</td><td><code>a = b;</code> та <code>b = c;</code></td></tr>
+            <tr><td>Пропуск 3 (Рамка квадрата)</td><td><code>j == n</code></td></tr>
+            <tr><td>Пропуск 4 (Крок Коллатца)</td><td><code>3 * n + 1</code></td></tr>
+            <tr><td>Тести 5–8</td><td>5: <strong>10 зірочок</strong>; 6: <strong>8 кроків</strong>; 7: <strong>Переповнення типу int</strong>; 8: <strong>4</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>💡 Еталонні розв'язки Практичної роботи №3 (C++)</h2>
+        <h3>Задача 2. Пісочний годинник (вкладені цикли)</h3>
+        <pre><button class="copy-btn" onclick="copyCode(this)">Копіювати</button><code>#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+int main() {
+    int n;
+    cin &gt;&gt; n;
+    int mid = n / 2;
+    for (int i = 0; i &lt; n; ++i) {
+        int spaces = mid - abs(mid - i);
+        int stars = n - 2 * spaces;
+        for (int s = 0; s &lt; spaces; ++s) cout &lt;&lt; ' ';
+        for (int k = 0; k &lt; stars; ++k) cout &lt;&lt; '*';
+        cout &lt;&lt; '
+';
+    }
+    return 0;
+}</code></pre>
+
+        <h3>Задача 3. Рекордсмен Коллатца на відрізку $[A; B]$</h3>
+        <pre><button class="copy-btn" onclick="copyCode(this)">Копіювати</button><code>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    long long a, b;
+    cin &gt;&gt; a &gt;&gt; b;
+    long long bestNum = a;
+    int maxSteps = -1;
+
+    for (long long x = a; x &lt;= b; ++x) {
+        long long cur = x;
+        int steps = 0;
+        while (cur != 1) {
+            if (cur % 2 == 0) cur /= 2;
+            else cur = 3 * cur + 1;
+            ++steps;
+        }
+        if (steps &gt; maxSteps) {
+            maxSteps = steps;
+            bestNum = x;
+        }
+    }
+    cout &lt;&lt; bestNum &lt;&lt; " " &lt;&lt; maxSteps &lt;&lt; endl;
+    return 0;
+}</code></pre>
+      </div>
+
+      <div class="card">
+        <h2>🎲 Генератор індивідуальних варіантів для класу</h2>
+        <button class="btn btn-secondary" onclick="genVariants()">Згенерувати 6 варіантів</button>
+        <div id="variantsBox" style="margin-top:0.8rem;"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+  function switchTab(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function copyCode(btn) {
+    const code = btn.parentElement.querySelector('code').innerText;
+    navigator.clipboard.writeText(code);
+    const old = btn.innerText;
+    btn.innerText = 'Скопійовано!';
+    setTimeout(() => btn.innerText = old, 1500);
+  }
+
+  // Simulator 1: Trace
+  function runTrace() {
+    const algo = document.getElementById('traceAlgo').value;
+    let n = parseInt(document.getElementById('traceN').value) || 5;
+    n = Math.max(1, Math.min(15, n));
+    let html = '<table><thead><tr><th>Ітерація (i)</th><th>Умова</th><th>Обчислення</th><th>Поточний результат</th></tr></thead><tbody>';
+    if (algo === 'fact') {
+      let f = 1;
+      for (let i = 1; i <= n; i++) {
+        let prev = f;
+        f *= i;
+        html += `<tr><td>i = ${i}</td><td>${i} &lt;= ${n} (true)</td><td>fact = ${prev} * ${i}</td><td><strong>${f}</strong></td></tr>`;
+      }
+    } else if (algo === 'fib') {
+      let a = 1, b = 1;
+      for (let i = 1; i <= n; i++) {
+        if (i <= 2) {
+          html += `<tr><td>i = ${i}</td><td>базовий член</td><td>F(${i}) = 1</td><td><strong>1</strong></td></tr>`;
+        } else {
+          let c = a + b;
+          html += `<tr><td>i = ${i}</td><td>${i} &lt;= ${n} (true)</td><td>c = ${a} + ${b}</td><td><strong>${c}</strong></td></tr>`;
+          a = b; b = c;
+        }
+      }
+    } else if (algo === 'interest') {
+      let s = 1000;
+      for (let i = 1; i <= n; i++) {
+        let prev = s.toFixed(2);
+        s *= 1.15;
+        html += `<tr><td>Рік ${i}</td><td>${i} &lt;= ${n} (true)</td><td>s = ${prev} * 1.15</td><td><strong>${s.toFixed(2)} грн</strong></td></tr>`;
+      }
+    } else {
+      let sum = 0;
+      for (let i = 1; i <= n; i++) {
+        if (i % 2 !== 0) {
+          sum += i * i;
+          html += `<tr><td>i = ${i}</td><td>непарне (true)</td><td>sum += ${i}² (${i*i})</td><td><strong>${sum}</strong></td></tr>`;
+        } else {
+          html += `<tr><td>i = ${i}</td><td>парне (пропуск)</td><td>—</td><td>${sum}</td></tr>`;
+        }
+      }
+    }
+    html += '</tbody></table>';
+    document.getElementById('traceOutput').innerHTML = html;
+  }
+
+  // Simulator 2: Shapes
+  function renderShape() {
+    const type = document.getElementById('shapeType').value;
+    let n = parseInt(document.getElementById('shapeN').value) || 6;
+    n = Math.max(3, Math.min(14, n));
+    let out = '';
+    let code = '';
+
+    if (type === 'rect') {
+      for (let i = 1; i <= n; i++) out += '* '.repeat(n) + '
+';
+      code = `for (int i = 1; i <= ${n}; ++i) {
+    for (int j = 1; j <= ${n}; ++j) cout << "* ";
+    cout << '\n';
+}`;
+    } else if (type === 'frame') {
+      for (let i = 1; i <= n; i++) {
+        for (let j = 1; j <= n; j++) out += (i === 1 || i === n || j === 1 || j === n) ? '* ' : '  ';
+        out += '
+';
+      }
+      code = `for (int i = 1; i <= ${n}; ++i) {
+    for (int j = 1; j <= ${n}; ++j)
+        cout << (i==1 || i==${n} || j==1 || j==${n} ? "* " : "  ");
+    cout << '\n';
+}`;
+    } else if (type === 'tri_left') {
+      for (let i = 1; i <= n; i++) out += '* '.repeat(i) + '
+';
+      code = `for (int i = 1; i <= ${n}; ++i) {
+    for (int j = 1; j <= i; ++j) cout << "* ";
+    cout << '\n';
+}`;
+    } else if (type === 'tri_inv') {
+      for (let i = 1; i <= n; i++) out += '* '.repeat(n - i + 1) + '
+';
+      code = `for (int i = 1; i <= ${n}; ++i) {
+    for (int j = 1; j <= ${n} - i + 1; ++j) cout << "* ";
+    cout << '\n';
+}`;
+    } else if (type === 'pyramid') {
+      for (let i = 1; i <= n; i++) out += ' '.repeat(n - i) + '*'.repeat(2 * i - 1) + '
+';
+      code = `for (int i = 1; i <= ${n}; ++i) {
+    for (int s = 1; s <= ${n} - i; ++s) cout << ' ';
+    for (int k = 1; k <= 2 * i - 1; ++k) cout << '*';
+    cout << '\n';
+}`;
+    } else if (type === 'diag') {
+      for (let i = 1; i <= n; i++) {
+        for (let j = 1; j <= n; j++) out += (i === j || i + j === n + 1) ? '* ' : '. ';
+        out += '
+';
+      }
+      code = `for (int i = 1; i <= ${n}; ++i) {
+    for (int j = 1; j <= ${n}; ++j)
+        cout << (i == j || i + j == ${n} + 1 ? "* " : ". ");
+    cout << '\n';
+}`;
+    }
+    document.getElementById('shapeCanvas').textContent = out;
+    document.getElementById('shapeCode').textContent = code;
+  }
+
+  // Simulator 3: Collatz
+  function runCollatz() {
+    let n = parseInt(document.getElementById('collatzInput').value);
+    if (!n || n < 2) n = 27;
+    let seq = [n];
+    let cur = n;
+    while (cur !== 1 && seq.length < 500) {
+      cur = (cur % 2 === 0) ? cur / 2 : 3 * cur + 1;
+      seq.push(cur);
+    }
+    const maxVal = Math.max(...seq);
+    document.getElementById('collatzStats').innerHTML =
+      `Старт: <span style="color:var(--primary)">${n}</span> | Кількість кроків до 1: <span style="color:var(--secondary)">${seq.length - 1}</span> | Пікове значення: <span style="color:var(--accent)">${maxVal}</span>`;
+    const barsEl = document.getElementById('collatzBars');
+    barsEl.innerHTML = '';
+    seq.forEach((val, idx) => {
+      const h = Math.max(6, Math.round((val / maxVal) * 125));
+      const bar = document.createElement('div');
+      bar.className = 'bar';
+      bar.style.height = h + 'px';
+      bar.title = `Крок ${idx}: ${val}`;
+      barsEl.appendChild(bar);
+    });
+    document.getElementById('collatzSeq').textContent = 'Послідовність: ' + seq.join(' → ');
+  }
+
+  // Scoring & Practice
+  const scores = { g1: 0, g2: 0, g3: 0, g4: 0, quiz: 0 };
+
+  function norm(s) {
+    return s.replace(/\s+/g, '').replace(/;/g, '').toLowerCase();
+  }
+
+  function checkGap(num, validList) {
+    const val = norm(document.getElementById('gap' + num).value);
+    const fb = document.getElementById('fb' + num);
+    if (validList.includes(val)) {
+      fb.className = 'feedback ok';
+      fb.textContent = 'Правильно! +1 бал.';
+      scores['g' + num] = 1;
+    } else {
+      fb.className = 'feedback err';
+      fb.textContent = 'Не зовсім точно. Перевірте синтаксис виразу C++.';
+      scores['g' + num] = 0;
+    }
+    updateScore();
+  }
+
+  function checkGap2() {
+    const a = norm(document.getElementById('gap2a').value);
+    const b = norm(document.getElementById('gap2b').value);
+    const fb = document.getElementById('fb2');
+    if (a === 'b' && b === 'c') {
+      fb.className = 'feedback ok';
+      fb.textContent = 'Правильно! Спочатку a отримує значення b, а потім b отримує нове c. +1 бал.';
+      scores.g2 = 1;
+    } else {
+      fb.className = 'feedback err';
+      fb.textContent = 'Помилка: у змінну a потрібно записати b, а у змінну b — нову суму c.';
+      scores.g2 = 0;
+    }
+    updateScore();
+  }
+
+  function gradeQuiz() {
+    let qPts = 0;
+    for (let i = 5; i <= 8; i++) {
+      const sel = document.querySelector(`input[name="q${i}"]:checked`);
+      if (sel && sel.value === '1') qPts++;
+    }
+    scores.quiz = qPts;
+    const fb = document.getElementById('quizFb');
+    fb.className = qPts >= 3 ? 'feedback ok' : 'feedback err';
+    fb.textContent = `Результат тесту: ${qPts} з 4 балів.`;
+    updateScore();
+  }
+
+  function updateScore() {
+    let prPts = 0;
+    document.querySelectorAll('.pr-chk:checked').forEach(chk => {
+      prPts += parseFloat(chk.dataset.pts);
+    });
+    const total = scores.g1 + scores.g2 + scores.g3 + scores.g4 + scores.quiz + prPts;
+    document.getElementById('totalScore').textContent = total;
+    return total;
+  }
+
+  function generateReport() {
+    const name = document.getElementById('studentName').value.trim() || 'Учень / Учениця 10 класу';
+    const repo = document.getElementById('repoUrl').value.trim() || 'Посилання не вказано';
+    const total = updateScore();
+    const now = new Date().toLocaleString('uk-UA');
+    document.getElementById('studentReport').innerHTML = `
+      <div style="margin-top:0.8rem; padding:1rem; background:#fff; border:1px solid #cbd5e1; border-radius:8px;">
+        <strong>Сертифікат виконання • Інформатика (10 клас, поглиблений рівень)</strong><br>
+        Учень: <strong>${name}</strong><br>
+        Тема: <em>Уроки 11–12. Цикл for, вкладені цикли, гіпотеза Коллатца (ПР №3)</em><br>
+        Репозиторій GitHub: <a href="${repo}" target="_blank" rel="noopener">${repo}</a><br>
+        Підсумковий бал: <strong>${total} / 12</strong> • Дата: ${now}<br>
+        <button class="btn btn-outline no-print" onclick="window.print()" style="margin-top:0.6rem;">Друкувати / Зберегти в PDF</button>
+      </div>
+    `;
+  }
+
+  // Teacher Cabinet
+  function unlockTeacher() {
+    const pass = document.getElementById('teacherPass').value;
+    if (pass === '2569') {
+      document.getElementById('teacherLock').style.display = 'none';
+      document.getElementById('teacherPanel').style.display = 'block';
+    } else {
+      document.getElementById('passFb').style.display = 'block';
+    }
+  }
+
+  function genVariants() {
+    const shapes = ['Прямокутний трикутник із вершиною справа зверху', 'Ромб із символів * для непарного N', 'Порожній трикутник (лише контур)', 'Літера Z розміром N×N', 'Шахівниця з символів # та .', 'Літера N розміром N×N'];
+    const ranges = ['[10; 50]', '[25; 100]', '[50; 200]', '[100; 300]', '[15; 85]', '[200; 500]'];
+    let html = '<table><thead><tr><th>Варіант</th><th>Задача 1 (Цикл for)</th><th>Задача 2 (Вкладені цикли)</th><th>Задача 3 (Коллатц)</th></tr></thead><tbody>';
+    for (let i = 0; i < 6; i++) {
+      html += `<tr><td><strong>Варіант ${i+1}</strong></td><td>Сума перших N членів Фібоначчі, кратних ${i+2}</td><td>${shapes[i]}</td><td>Знайти число з макс. кроками на відрізку ${ranges[i]}</td></tr>`;
+    }
+    html += '</tbody></table>';
+    document.getElementById('variantsBox').innerHTML = html;
+  }
+
+  // Init simulators
+  runTrace();
+  renderShape();
+  runCollatz();
+</script>
+</body>
+</html>
